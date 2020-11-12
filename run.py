@@ -54,10 +54,10 @@ cag = ClippingAreaGenerator(data)
 healthy = [vec for vec, lab in zip(data, labels) if lab == 0]
 ill = [vec for vec, lab in zip(data, labels) if lab == 1]
 
-for h_neu in xrange(1, 30):
-    for i_neu in xrange(1, 60):
+for h_neu in range(1, 30):
+    for i_neu in range(1, 60):
         results = []
-        for attempt in xrange(0, 5):
+        for attempt in range(0, 5):
 
             nh = LVQNeuralNet(len(data[0]))
             ni = LVQNeuralNet(len(data[0]))

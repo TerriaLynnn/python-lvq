@@ -17,13 +17,13 @@ class ClippingAreaGenerator(object):
     def __init__(self, data):
         self.n = len(data[0])
         kv = sum(data) / len(data)
-        self.maxs = [max([x[i] for x in data])/4-kv[i] for i in xrange(0, self.n)]
-        self.mins = [min([x[i] for x in data])/4-kv[i] for i in xrange(0, self.n)]
+        self.maxs = [max([x[i] for x in data])/4-kv[i] for i in range(0, self.n)]
+        self.mins = [min([x[i] for x in data])/4-kv[i] for i in range(0, self.n)]
         # so numbers must fall in range (mins..maxs) for given dimension i
 
     def get_vector(self):
         s = []
-        for i in xrange(0, self.n):
+        for i in range(0, self.n):
             q = random()*(self.maxs[i] - self.mins[i]) - self.mins[i]
             s.append(q)
         return np.array(s)
@@ -33,7 +33,7 @@ class LVQNeuron(object):
     def __init__(self, n, label):
         """@param n: Generator vector
         @param label: Class label"""
-        self.vector = np.array([rnd() for x in xrange(0, n)])
+        self.vector = np.array([rnd() for x in range(0, n)])
         self.label = label
 
     def dist(self, vector):
@@ -53,7 +53,7 @@ class LVQNeuralNet(object):
 
     def add_random_neurons(self, k, label):
         """Adds k neurons of label class with randomly generated vectors"""
-        self.neurons.extend([LVQNeuron(self.n, label) for x in xrange(0, k)])
+        self.neurons.extend([LVQNeuron(self.n, label) for x in range(0, k)])
 
     def get_classifier(self, vector):
         """Returns the classifier neuron"""
@@ -72,7 +72,7 @@ class LVQNeuralNet(object):
 
 
 def trainlvq(lvq, input_vecs, label_vecs, a, series):
-    for x in xrange(0, series):
+    for x in range(0, series):
         for lab, vec in zip(label_vecs, input_vecs):
             lvq.get_classifier(vec).train(vec, lab, a)
 
@@ -85,8 +85,8 @@ def trainlvq_equipresent(lvq, input_vecs, label_vecs, a, series, psp):
     for label, vec in zip(label_vecs, input_vecs):
         dataclasses[label].append(vec)
 
-    for s in xrange(0, series):
-        for _ in xrange(0, psp):
+    for s in range(0, series):
+        for _ in range(0, psp):
             for label in dataclasses.iterkeys():            
                 vec = choice(dataclasses[label])
                 lvq.get_classifier(vec).train(vec, label, a)
@@ -100,19 +100,19 @@ def trainsom_equipresent(lvq, input_vecs, label_vecs, a, series, theta, psp):
     for label, vec in zip(label_vecs, input_vecs):
         dataclasses[label].append(vec)
 
-    for s in xrange(0, series):
-        for _ in xrange(0, psp):
+    for s in range(0, series):
+        for _ in range(0, psp):
             for label in dataclasses.iterkeys():
                 vec = choice(dataclasses[label])
                 winner = lvq.get_classifier(vec)
-                for i in xrange(0, len(lvq.neurons)):
+                for i in range(0, len(lvq.neurons)):
                     lvq.neurons[i].vector += theta(lvq.neurons[i].vector, winner.vector, s) * a * (vec - winner.vector)
 
 def trainsom(lvq, input_vecs, a, series, theta):
-    for s in xrange(0, series):
+    for s in range(0, series):
         for vec in input_vecs:
             winner = lvq.get_classifier(vec)
-            for i in xrange(0, len(lvq.neurons)):
+            for i in range(0, len(lvq.neurons)):
                 lvq.neurons[i].vector += theta(lvq.neurons[i].vector, winner.vector, s) * a * (vec - winner.vector)
 
 def differentiate_voronoi(lvq, input_vecs, label_vecs):
@@ -144,7 +144,7 @@ def differentiate_voronoi(lvq, input_vecs, label_vecs):
 
     # Check if all labels have been used...
     if len(possible_labels) != len(set([neuron.label for neuron in lvq.neurons])):
-        raise Exception, 'Map failed to differentiate properly'
+        raise Exception('Map failed to differentiate properly')
 
 
 def differentiate_knearest(lvq, input_vecs, label_vecs, k=5):
@@ -157,14 +157,14 @@ def differentiate_knearest(lvq, input_vecs, label_vecs, k=5):
         neighbors = neighbors[:k]
 
         if len(neighbors) != k:
-            raise Exception, 'Cannot pick %s neighbors' % k
+            raise Exception('Cannot pick %s neighbors' % k)
 
         neuron.label = max([(label, neighbors.count(label)) for label in labels],
                            key = get_fel)[0]
 
     # Check if all labels have been used...
     if len(labels) != len(set([neuron.label for neuron in lvq.neurons])):
-        raise Exception, 'Map failed to differentiate properly'
+        raise Exception('Map failed to differentiate properly')
 
 def assess(lvq, input_data, label_data):
     """Assess the network performance.
@@ -203,8 +203,8 @@ def normalize_each_dimension_separately(data):
 
     Current standard routine used to normalize input data"""
     # Create maximum and minimum vector
-    maxs = np.array([max([x[i] for x in data]) for i in xrange(0, len(data[0]))])
-    mins = np.array([min([x[i] for x in data]) for i in xrange(0, len(data[0]))])
+    maxs = np.array([max([x[i] for x in data]) for i in range(0, len(data[0]))])
+    mins = np.array([min([x[i] for x in data]) for i in range(0, len(data[0]))])
 
     # Normalize the values to [-1, 1]
     data = [(((vec-mins)/(maxs-mins))-0.5)*2 for vec in data]   # crude mapminmax
