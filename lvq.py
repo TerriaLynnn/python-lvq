@@ -1,4 +1,4 @@
-from __future__ import division
+
 import numpy as np
 from collections import defaultdict
 from random import random, choice
@@ -87,7 +87,7 @@ def trainlvq_equipresent(lvq, input_vecs, label_vecs, a, series, psp):
 
     for s in range(0, series):
         for _ in range(0, psp):
-            for label in dataclasses.iterkeys():            
+            for label in dataclasses.keys():            
                 vec = choice(dataclasses[label])
                 lvq.get_classifier(vec).train(vec, label, a)
 
@@ -102,7 +102,7 @@ def trainsom_equipresent(lvq, input_vecs, label_vecs, a, series, theta, psp):
 
     for s in range(0, series):
         for _ in range(0, psp):
-            for label in dataclasses.iterkeys():
+            for label in dataclasses.keys():
                 vec = choice(dataclasses[label])
                 winner = lvq.get_classifier(vec)
                 for i in range(0, len(lvq.neurons)):
@@ -135,12 +135,12 @@ def differentiate_voronoi(lvq, input_vecs, label_vecs):
             nds[neuron] = vectors
 
     # Assign a category
-    for neuron, vectors in nds.iteritems():
+    for neuron, vectors in nds.items():
         voting_dict = dict([(label, 0) for label in possible_labels])
         for vec, label in vectors:
             voting_dict[label] += 1
 
-        neuron.label = max(voting_dict.iteritems(), key=get_sel)[0]
+        neuron.label = max(iter(voting_dict.items()), key=get_sel)[0]
 
     # Check if all labels have been used...
     if len(possible_labels) != len(set([neuron.label for neuron in lvq.neurons])):
@@ -250,7 +250,7 @@ def knn_eliminate(data, labels, k):
             else: apJ += 1
             premoved += 1
             
-    print '%s %s' % (apZ, apJ)
+    print('%s %s' % (apZ, apJ))
     return newdata, newlabels, premoved
     
 def classify_knn(data, labels, k):
@@ -261,9 +261,9 @@ def classify_knn(data, labels, k):
     
     for vec, lab in zip(data, labels):
         nd = sorted(zip(data, labels), key=lambda x: np.linalg.norm(vec-x[0]))
-        dp = map(get_sel, nd[1:k+1])    # dn is array of labels
+        dp = list(map(get_sel, nd[1:k+1]))    # dn is array of labels
         
-        histogram = histogramize(dp).items()
+        histogram = list(histogramize(dp).items())
         histogram.sort(key=get_sel, reverse=True)
         answer = histogram[0][0]
         

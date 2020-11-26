@@ -1,4 +1,4 @@
-from __future__ import division
+
 # The LVQ Project
 # -------------- imports
 import numpy as np
@@ -21,9 +21,9 @@ from math import e
 data = []
 labels = []
 with open('parkinsons.data', 'r') as f:
-    f.next()        # skip header
+    next(f)        # skip header
     for row in f:
-        x = map(float, row.replace('\n','').split(',')[1:])
+        x = list(map(float, row.replace('\n','').split(',')[1:]))
 
         labels.append(x[16])    # x[16] is status
         del x[16]
@@ -83,4 +83,4 @@ for h_neu in range(1, 30):
         A2.remove(max(A2))
         A2.remove(min(A2))                        
 
-        print '%s %s %s %s' % (h_neu, i_neu, sum(A1)/len(A1), sum(A2)/len(A2))
+        print('%s %s %s %s' % (h_neu, i_neu, sum(A1)/len(A1), sum(A2)/len(A2)))
